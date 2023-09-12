@@ -17,6 +17,8 @@ function createWindow() {
     }
   })
 
+  mainWindow.webContents.toggleDevTools()
+
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
