@@ -19,18 +19,17 @@ onMounted(() => {
 
 <template>
   <n-message-provider>
-    <div>
-      <router-view v-slot="{ Component, route }">
-        <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
-          <KeepAlive :include="getAllKeepAlive()">
-            <component :is="Component" />
-          </KeepAlive>
-        </transition>
-      </router-view>
-    </div>
+    <router-view v-slot="{ Component, route }">
+      <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
+        <KeepAlive :include="getAllKeepAlive()">
+          <component :is="Component" />
+        </KeepAlive>
+      </transition>
+    </router-view>
   </n-message-provider>
 </template>
 
 <style lang="less">
 @import './assets/css/styles.less';
+@import './assets/css//base.scss';
 </style>
