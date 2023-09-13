@@ -7,7 +7,9 @@ export const useLoginStore = defineStore('login', {
       // 是否登录
       isLogin: false,
       // token
-      acc_token: ''
+      acc_token: '',
+      // cookie
+      acc_cookie: ''
     }
   },
   getters: {},

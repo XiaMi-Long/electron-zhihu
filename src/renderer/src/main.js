@@ -4,11 +4,11 @@ import 'animate.css'
 import { createPinia } from 'pinia'
 import { router } from '@renderer/router/index'
 
-import { create } from 'naive-ui'
+import { create, NButton, NMessageProvider } from 'naive-ui'
 
 const pinia = createPinia()
 const naive = create({
-  components: []
+  components: [NButton, NMessageProvider]
 })
 
 createApp(App).use(router).use(naive).use(pinia).mount('#app')

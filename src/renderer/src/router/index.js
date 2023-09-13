@@ -20,6 +20,15 @@ const routes = [
     //     }
     //   }
     // ]
+  },
+  {
+    name: 'Home',
+    path: '/home',
+    component: () => import('@renderer/views/Home/index.vue'),
+    meta: {
+      title: '推荐',
+      keepAlive: false
+    }
   }
 ]
 
