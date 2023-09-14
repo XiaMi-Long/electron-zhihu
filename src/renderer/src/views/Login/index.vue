@@ -20,6 +20,10 @@ const enterClick = function () {
   loginStore.acc_token = token.value
   loginStore.acc_cookie = cookie.value
   loginStore.isLogin = true
+  window.api.store.set(loginStore.localCacheKey, {
+    acc_token: token.value,
+    acc_cookie: cookie.value
+  })
   router.replace('/home')
   console.log(loginStore)
 }

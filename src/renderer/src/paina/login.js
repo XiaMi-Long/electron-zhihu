@@ -9,7 +9,9 @@ export const useLoginStore = defineStore('login', {
       // token
       acc_token: '',
       // cookie
-      acc_cookie: ''
+      acc_cookie: '',
+      // 本地缓存key常量名
+      localCacheKey: 'ACC_TOKEN_ACC_COOKIE'
     }
   },
   getters: {},

@@ -1,24 +1,115 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted } from 'vue'
+import { recommend } from '../../api/index'
+import { useLoginStore } from '@renderer/paina/login'
+
+const page = ref({
+  pageNumber: 2
+})
+const loginStore = useLoginStore()
+
+// 获取推荐文章
+const getRecommend = async function () {
+  const params = {
+    action: 'down',
+    ad_interval: -10,
+    after_id: 5,
+    desktop: true,
+    page_number: page.value.pageNumber,
+    session_token: loginStore.acc_token
+  }
+
+  const res = await recommend(params)
+  console.log(res)
+}
+
+getRecommend()
+</script>
 
 <template>
   <div class="background">
-    <div class="container">
-      <div class="body">这是文字这是文章</div>
-    </div>
+    <n-scrollbar>
+      <div class="container">
+        <div class="list-item">
+          <div class="title">Primoise.all是并行还是并发</div>
+          <div class="article">
+            <div class="left">
+              <n-image class="img" src="src/assets/image/1.jpg" />
+            </div>
+
+            <div class="right">
+              <div>
+                <span> 可爱的CC： </span>
+              </div>
+              <div>
+                <span>
+                  globalShortcut 模块可以在操作系统中注册/注销全局快捷键,
+                  以便可以为操作定制各种快捷键。 注意: 快捷方式是全局的; 即使应用程序没有键盘焦点,
+                  它也仍然在持续监听键盘事件。 在 app 模块的 ready 事件就绪之前，这个模块不能使用。
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </n-scrollbar>
   </div>
 </template>
 
 <style scoped lang="scss">
 .background {
-  background-color: #26292a;
+  width: 100%;
+  height: 100%;
 
+  background-color: #f6f6f6;
+
+  overflow: auto;
   .container {
     display: flex;
+    flex-direction: column;
+
+    height: 100%;
 
     padding: 50px 50px 0 50px;
 
-    .body {
-      //   width: 100%;
+    .list-item {
+      box-sizing: border-box;
+
+      width: 100%;
+      min-height: 150px;
+
+      background-color: #ffffff;
+
+      border-bottom: 1px solid #f6f4f4;
+
+      padding: 10px 20px 20px 20px;
+
+      .title {
+        font-weight: bold;
+      }
+
+      .article {
+        display: flex;
+
+        margin-top: 10px;
+
+        .left {
+          width: 20%;
+
+          :deep(.n-image img) {
+            width: 100%;
+            height: 100%;
+          }
+        }
+
+        .right {
+          width: 80%;
+
+          font-size: 12px;
+
+          padding-left: 10px;
+        }
+      }
     }
   }
 }

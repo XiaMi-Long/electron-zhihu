@@ -1,12 +1,14 @@
 import { join } from 'path'
 
+// store-ipc
+import { storeIpc } from './ipc/index'
+
 // image
 import appIcon from '../../resources/image/L.L.ico?asset'
 
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
 
-console.log(join(__dirname, 'image/L.L.ico'))
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -68,6 +70,8 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
+  // 初始化store的ipc通信
+  storeIpc()
 
   const mainWindow = createWindow()
 

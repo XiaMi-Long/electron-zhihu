@@ -8,12 +8,31 @@ import { getAllKeepAlive } from '@renderer/router/index'
 const router = useRouter()
 const loginStore = useLoginStore()
 
-onMounted(() => {
+// 先判断本地缓存中是否有
+const getLocal = async function () {
+  // window.api.store.del(loginStore.localCacheKey)
+  const hasLocal = await window.api.store.has(loginStore.localCacheKey)
+  if (hasLocal) {
+    const { acc_token, acc_cookie } = await window.api.store.get(loginStore.localCacheKey)
+    loginStore.acc_token = acc_token
+    loginStore.acc_cookie = acc_cookie
+    loginStore.isLogin = true
+  }
+
+  // 检验登录状态判断是否跳转登录
   if (loginStore.isLogin === false) {
-    // 检验登录状态判断是否跳转登录
     router.push('/')
     coloredLog('当前的登录状态为：未登录', Colors.YELLOW)
   }
+
+  if (loginStore.isLogin === true) {
+    router.push('/home')
+    coloredLog('当前的登录状态为：已登录', Colors.GREEN)
+  }
+}
+
+onMounted(() => {
+  getLocal()
 })
 </script>
 
