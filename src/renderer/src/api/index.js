@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-// axios.defaults.baseURL = 'https://www.zhihu.com/api/v3/'
+axios.defaults.baseURL = 'http://localhost:5172'
 
 // 获取推荐文章
 export const recommend = function (params) {
   return axios({
     method: 'get',
-    url: '/api/zhihu/feed/topstory/recommend',
+    url: 'feed/topstory/recommend',
     params
   })
 }

@@ -6,6 +6,8 @@ import { storeIpc } from './ipc/index'
 // image
 import appIcon from '../../resources/image/L.L.ico?asset'
 
+const http = require('http')
+
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
 
@@ -50,6 +52,32 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  function onRequest(client_req, client_res) {
+    const proxyUrl = '/api/v3' + client_req.url
+    console.log('New request:', client_req.method, proxyUrl)
+
+    const options = {
+      hostname: 'www.zhihu.com', // 这里是你的代理服务器地址
+      port: 443,
+      path: '/api/v3/' + client_req.url,
+      method: client_req.method,
+      headers: client_req.headers
+    }
+
+    const proxy = http.request(options, function (res) {
+      client_res.writeHead(res.statusCode, res.headers)
+      res.pipe(client_res, {
+        end: true
+      })
+    })
+    console.log(proxy)
+    client_req.pipe(proxy, {
+      end: true
+    })
+  }
+
+  http.createServer(onRequest).listen(5172)
+
   const appTray = new Tray(nativeImage.createFromPath(appIcon))
   // 监听点击托盘图标事件
   // 点击托盘图标时显示/隐藏应用窗口

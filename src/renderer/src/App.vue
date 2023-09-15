@@ -48,7 +48,7 @@ onMounted(() => {
   </n-message-provider>
 </template>
 
-<style lang="less">
-@import './assets/css/styles.less';
+<style lang="scss">
+@import './assets/css/styles.scss';
 @import './assets/css//base.scss';
 </style>
