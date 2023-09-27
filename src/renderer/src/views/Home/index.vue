@@ -5,9 +5,11 @@ import { useLoginStore } from '@renderer/paina/login'
 const page = ref({
   pageNumber: 2
 })
+const bodyList = ref([])
 
 const loginStore = useLoginStore()
 
+// window.api.store.del(loginStore.localCacheKey)
 // 获取推荐文章
 const getRecommend = async function () {
   const params = {
@@ -18,10 +20,12 @@ const getRecommend = async function () {
     page_number: page.value.pageNumber,
     session_token: loginStore.acc_token
   }
-  const res = await window.api.http.getRecommend(params)
-  console.log(res)
-}
 
+  // const res = await window.api.http.getRecommend(params)
+  const obj = JSON.parse(res)
+  bodyList.value = obj.data
+  console.log(JSON.stringify(bodyList.value))
+}
 getRecommend()
 </script>
 
@@ -29,8 +33,8 @@ getRecommend()
   <div class="background">
     <n-scrollbar>
       <div class="container">
-        <div class="list-item">
-          <div class="title">Primoise.all是并行还是并发</div>
+        <div v-for="(item, index) of bodyList" :key="index" class="list-item">
+          <div class="title">{{ item.target.question.title }}</div>
           <div class="article">
             <div class="left">
               <n-image class="img" src="src/assets/image/1.jpg" />
@@ -38,7 +42,7 @@ getRecommend()
 
             <div class="right">
               <div>
-                <span> 可爱的CC： </span>
+                <span> {{ item.target.question.title }} </span>
               </div>
               <div>
                 <span>

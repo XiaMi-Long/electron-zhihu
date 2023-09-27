@@ -22,7 +22,7 @@ function httpRequest(method, url, params = {}, data = null) {
       url: baseUrl + url + '?' + new URLSearchParams(params).toString()
     })
 
-    console.log(baseUrl + url + '&' + new URLSearchParams(params).toString())
+    console.log(baseUrl + url + '?' + new URLSearchParams(params).toString())
 
     request.on('response', (response) => {
       let body = ''

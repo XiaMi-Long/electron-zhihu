@@ -11,7 +11,6 @@ const message = useMessage()
 const loginStore = useLoginStore()
 
 const enterClick = function () {
-  // 将鼠标样式设置为等待状态
   if (token.value.length === 0 || cookie.value.length === 0) {
     message.error('请输入token')
     return
