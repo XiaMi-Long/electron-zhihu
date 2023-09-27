@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 
+import { recommend } from '../api/index'
 import { getStore, delStore, hasStore, setStore } from '../module/store'
 
 const storeIpc = function () {
@@ -13,4 +14,8 @@ const storeIpc = function () {
   ipcMain.on('store:delete-store', delStore)
 }
 
-export { storeIpc }
+const http = function () {
+  ipcMain.handle('http:recommend', recommend)
+}
+
+export { storeIpc, http }

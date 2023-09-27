@@ -8,6 +8,9 @@ const api = {
     set: (key, value) => ipcRenderer.send('store:set-store', key, value),
     has: (key) => ipcRenderer.invoke('store:has-store', key),
     del: (key) => ipcRenderer.send('store:delete-store', key)
+  },
+  http: {
+    getRecommend: (params) => ipcRenderer.invoke('http:recommend', params)
   }
 }
 

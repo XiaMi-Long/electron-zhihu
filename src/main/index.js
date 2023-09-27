@@ -1,12 +1,13 @@
 import { join } from 'path'
 
 // store-ipc
-import { storeIpc } from './ipc/index'
+import { storeIpc, http } from './ipc/index'
 
 // image
 import appIcon from '../../resources/image/L.L.ico?asset'
 
-const http = require('http')
+// http
+import { startLogging, stopLogging } from './utils/http'
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
@@ -51,32 +52,8 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  function onRequest(client_req, client_res) {
-    const proxyUrl = '/api/v3' + client_req.url
-    console.log('New request:', client_req.method, proxyUrl)
-
-    const options = {
-      hostname: 'www.zhihu.com', // 这里是你的代理服务器地址
-      port: 443,
-      path: '/api/v3/' + client_req.url,
-      method: client_req.method,
-      headers: client_req.headers
-    }
-
-    const proxy = http.request(options, function (res) {
-      client_res.writeHead(res.statusCode, res.headers)
-      res.pipe(client_res, {
-        end: true
-      })
-    })
-    console.log(proxy)
-    client_req.pipe(proxy, {
-      end: true
-    })
-  }
-
-  http.createServer(onRequest).listen(5172)
+app.whenReady().then(async () => {
+  await startLogging()
 
   const appTray = new Tray(nativeImage.createFromPath(appIcon))
   // 监听点击托盘图标事件
@@ -100,6 +77,8 @@ app.whenReady().then(() => {
   })
   // 初始化store的ipc通信
   storeIpc()
+  // 初始化http请求的ipc通信
+  http()
 
   const mainWindow = createWindow()
 
@@ -141,6 +120,8 @@ app.on('window-all-closed', () => {
   }
 })
 
-app.on('will-quit', () => {})
+app.on('will-quit', async () => {
+  await stopLogging()
+})
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.

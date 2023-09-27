@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { recommend } from '../../api/index'
 import { useLoginStore } from '@renderer/paina/login'
 
 const page = ref({
   pageNumber: 2
 })
+
 const loginStore = useLoginStore()
 
 // 获取推荐文章
@@ -18,8 +18,7 @@ const getRecommend = async function () {
     page_number: page.value.pageNumber,
     session_token: loginStore.acc_token
   }
-
-  const res = await recommend(params)
+  const res = await window.api.http.getRecommend(params)
   console.log(res)
 }
 
