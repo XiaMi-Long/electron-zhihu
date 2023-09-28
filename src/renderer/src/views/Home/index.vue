@@ -52,8 +52,8 @@ const goPage = function (item) {
   console.log(item)
 }
 
-// getRecommendTest()
-getRecommend()
+getRecommendTest()
+// getRecommend()
 
 onMounted(() => {
   const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
