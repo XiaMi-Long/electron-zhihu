@@ -1,4 +1,6 @@
 <script setup>
+import { debounce } from 'lodash'
+import { question } from './text'
 import { ref, onMounted } from 'vue'
 import { useLoginStore } from '@renderer/paina/login'
 
@@ -21,35 +23,64 @@ const getRecommend = async function () {
     session_token: loginStore.acc_token
   }
 
-  // const res = await window.api.http.getRecommend(params)
+  const res = await window.api.http.getRecommend(params)
   const obj = JSON.parse(res)
-  bodyList.value = obj.data
-  console.log(JSON.stringify(bodyList.value))
+  // 过滤掉不是正常问题的答案
+  obj.data = obj.data.filter((item) => {
+    return item.target.question
+  })
+  bodyList.value = [...bodyList.value, ...obj.data]
+  console.log(bodyList.value)
 }
+
+const getRecommendTest = async function () {
+  const obj = question
+  bodyList.value = obj
+  console.log(obj)
+}
+
+// 定义处理滚动事件的函数
+const handleScroll = ({ target }) => {
+  if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
+    page.value.pageNumber++
+    getRecommend()
+  }
+}
+
+// 前往文章页
+const goPage = function (item) {
+  console.log(item)
+}
+
+// getRecommendTest()
 getRecommend()
+
+onMounted(() => {
+  const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
+  scroll.addEventListener('scroll', debounce(handleScroll, 200))
+})
 </script>
 
 <template>
   <div class="background">
     <n-scrollbar>
       <div class="container">
-        <div v-for="(item, index) of bodyList" :key="index" class="list-item">
+        <div v-for="(item, index) of bodyList" :key="index" class="list-item" @click="goPage(item)">
           <div class="title">{{ item.target.question.title }}</div>
           <div class="article">
-            <div class="left">
-              <n-image class="img" src="src/assets/image/1.jpg" />
+            <div v-if="item.target.thumbnail" class="left">
+              <n-image class="img" :src="item.target.thumbnail" />
             </div>
 
+            <div v-if="item.target.thumbnail" class="space"></div>
+
             <div class="right">
+              <div class="author">{{ item.target.author.name }}：</div>
               <div>
-                <span> {{ item.target.question.title }} </span>
+                <span> {{ item.target.excerpt_new }} </span>
               </div>
               <div>
-                <span>
-                  globalShortcut 模块可以在操作系统中注册/注销全局快捷键,
-                  以便可以为操作定制各种快捷键。 注意: 快捷方式是全局的; 即使应用程序没有键盘焦点,
-                  它也仍然在持续监听键盘事件。 在 app 模块的 ready 事件就绪之前，这个模块不能使用。
-                </span>
+                <span> </span>
               </div>
             </div>
           </div>
@@ -97,20 +128,18 @@ getRecommend()
         margin-top: 10px;
 
         .left {
-          width: 20%;
-
           :deep(.n-image img) {
             width: 100%;
             height: 100%;
           }
         }
 
+        .space {
+          width: 70px;
+        }
+
         .right {
-          width: 80%;
-
           font-size: 12px;
-
-          padding-left: 10px;
         }
       }
     }
