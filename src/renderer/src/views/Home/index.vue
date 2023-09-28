@@ -1,6 +1,6 @@
 <script setup>
 import { debounce } from 'lodash'
-import { question } from './text'
+import { question } from './test'
 import { ref, onMounted } from 'vue'
 import { useLoginStore } from '@renderer/paina/login'
 
@@ -67,6 +67,7 @@ onMounted(() => {
       <div class="container">
         <div v-for="(item, index) of bodyList" :key="index" class="list-item" @click="goPage(item)">
           <div class="title">{{ item.target.question.title }}</div>
+
           <div class="article">
             <div v-if="item.target.thumbnail" class="left">
               <n-image class="img" :src="item.target.thumbnail" />
