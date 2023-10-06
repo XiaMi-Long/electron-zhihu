@@ -27,6 +27,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.1.6",
     "sass": "^1.66.1",
+    "viewerjs": "^1.11.6",
     "vue-router": "^4.2.4"
   },
   "devDependencies": {

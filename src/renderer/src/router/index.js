@@ -4,7 +4,7 @@ const routes = [
   {
     name: 'Login',
     path: '/',
-    component: () => import('@renderer/views/Login/index.vue'),
+    component: () => import('@renderer/views/login/index.vue'),
     meta: {
       title: '登录',
       keepAlive: false
@@ -24,9 +24,18 @@ const routes = [
   {
     name: 'Home',
     path: '/home',
-    component: () => import('@renderer/views/Home/index.vue'),
+    component: () => import('@renderer/views/home/index.vue'),
     meta: {
       title: '推荐',
+      keepAlive: true
+    }
+  },
+  {
+    name: 'detail',
+    path: '/detail/:articleId/question/:questionId',
+    component: () => import('@renderer/views/article-details/index.vue'),
+    meta: {
+      title: '文章详情',
       keepAlive: false
     }
   }

@@ -1,13 +1,15 @@
 <script setup>
-import { debounce } from 'lodash'
-import { question } from './test'
-import { ref, onMounted } from 'vue'
 import { useLoginStore } from '@renderer/paina/login'
+import { debounce } from 'lodash'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { question } from './test'
 
 const page = ref({
   pageNumber: 2
 })
 const bodyList = ref([])
+const router = useRouter()
 
 const loginStore = useLoginStore()
 
@@ -43,13 +45,14 @@ const getRecommendTest = async function () {
 const handleScroll = ({ target }) => {
   if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
     page.value.pageNumber++
-    getRecommend()
+    // getRecommend()
   }
 }
 
 // 前往文章页
 const goPage = function (item) {
-  console.log(item)
+  window.localStorage.setItem('article-detail', JSON.stringify(item))
+  router.push(`/detail/${item.target.id}/question/${item.target.question.id}`)
 }
 
 getRecommendTest()
@@ -65,7 +68,7 @@ onMounted(() => {
   <div class="background">
     <n-scrollbar>
       <div class="container">
-        <div v-for="(item, index) of bodyList" :key="index" class="list-item" @click="goPage(item)">
+        <div v-for="(item, index) of bodyList" :key="index" class="list-item">
           <div class="title">{{ item.target.question.title }}</div>
 
           <div class="article">
@@ -75,7 +78,7 @@ onMounted(() => {
 
             <div v-if="item.target.thumbnail" class="space"></div>
 
-            <div class="right">
+            <div class="right" @click="goPage(item)">
               <div class="author">{{ item.target.author.name }}：</div>
               <div>
                 <span> {{ item.target.excerpt_new }} </span>

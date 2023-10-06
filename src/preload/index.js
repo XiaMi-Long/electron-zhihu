@@ -10,7 +10,9 @@ const api = {
     del: (key) => ipcRenderer.send('store:delete-store', key)
   },
   http: {
-    getRecommend: (params) => ipcRenderer.invoke('http:recommend', params)
+    getRecommend: (params) => ipcRenderer.invoke('http:recommend', params),
+    getArticleDetails: (questionId, params, cookie) =>
+      ipcRenderer.invoke('http:getArticleDetails', questionId, params, cookie)
   }
 }
 
