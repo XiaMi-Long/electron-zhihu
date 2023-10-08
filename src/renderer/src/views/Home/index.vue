@@ -1,9 +1,9 @@
 <script setup>
-import { useLoginStore } from '@renderer/paina/login'
 import { debounce } from 'lodash'
+import { question } from './test'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { question } from './test'
+import { useLoginStore } from '@renderer/pinia/login'
 
 const page = ref({
   pageNumber: 2

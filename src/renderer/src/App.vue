@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useLoginStore } from '@renderer/paina/login'
+import { useLoginStore } from '@renderer/pinia/login'
 import { Colors, coloredLog } from '@renderer/util/log'
 import { getAllKeepAlive } from '@renderer/router/index'
 

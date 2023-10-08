@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useMessage } from 'naive-ui'
 import { useRouter } from 'vue-router'
-import { useLoginStore } from '@renderer/paina/login'
+import { useLoginStore } from '@renderer/pinia/login'
 
 const token = ref('')
 const cookie = ref('')

@@ -6,6 +6,9 @@ import 'viewerjs/dist/viewer.css'
 import { createPinia } from 'pinia'
 import { router } from '@renderer/router/index'
 
+import highlight from 'highlight.js'
+import 'highlight.js/styles/dark.css'
+
 import { create, NButton, NMessageProvider, NScrollbar, NImage } from 'naive-ui'
 
 const pinia = createPinia()
@@ -27,5 +30,7 @@ window.previewPhoto = function (event) {
   })
   viewer.show()
 }
+
+window.highlight = highlight
 
 createApp(App).use(router).use(naive).use(pinia).mount('#app')

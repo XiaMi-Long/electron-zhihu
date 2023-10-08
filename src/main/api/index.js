@@ -16,3 +16,8 @@ export const getArticleDetails = function (event, questionId, params, cookie) {
     cookie
   )
 }
+
+// 获取该问题下的回答分页
+export const getArticleDetailsByPage = function (event, url) {
+  return httpRequest('GET', url)
+}
