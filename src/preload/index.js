@@ -12,7 +12,9 @@ const api = {
   http: {
     getRecommend: (params) => ipcRenderer.invoke('http:recommend', params),
     getArticleDetails: (questionId, params, cookie) =>
-      ipcRenderer.invoke('http:getArticleDetails', questionId, params, cookie)
+      ipcRenderer.invoke('http:getArticleDetails', questionId, params, cookie),
+    getArticleDetailsByPage: (url, cookie) =>
+      ipcRenderer.invoke('http:getArticleDetailsByPage', url, cookie)
   }
 }
 

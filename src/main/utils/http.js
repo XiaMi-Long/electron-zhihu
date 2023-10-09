@@ -1,5 +1,4 @@
 const { net, netLog, app } = require('electron')
-const v3BaseUrl = 'https://www.zhihu.com/api/v3'
 
 // 开始记录网络日志
 async function startLogging() {
@@ -15,15 +14,20 @@ async function stopLogging() {
 }
 
 // 发送 HTTP 请求
-function httpRequest(method, url, params = {}, data = null, defaultBaseUrl = '', isAddCookie = '') {
+function httpRequest(config) {
   return new Promise((resolve, reject) => {
-    const baseUrl = defaultBaseUrl.length > 0 ? defaultBaseUrl : v3BaseUrl
+    const url = config.url
+    const method = config.method
+    const params = config?.params
+    const data = config?.data
+    const cookie = config?.cookie
+
     const request = net.request({
       method,
-      url: baseUrl + url + '?' + new URLSearchParams(params).toString()
+      url: params ? url + '?' + new URLSearchParams(params).toString() : url
     })
 
-    console.log(baseUrl + url + '?' + new URLSearchParams(params).toString())
+    console.log(url + '?' + new URLSearchParams(params).toString())
 
     request.on('response', (response) => {
       let body = ''
@@ -39,8 +43,8 @@ function httpRequest(method, url, params = {}, data = null, defaultBaseUrl = '',
       reject(error)
     })
 
-    if (isAddCookie.length > 0) {
-      request.setHeader('Cookie', isAddCookie)
+    if (cookie) {
+      request.setHeader('Cookie', cookie)
     }
 
     if (method === 'POST' && data) {

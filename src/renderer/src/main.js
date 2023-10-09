@@ -9,11 +9,19 @@ import { router } from '@renderer/router/index'
 import highlight from 'highlight.js'
 import 'highlight.js/styles/dark.css'
 
-import { create, NButton, NMessageProvider, NScrollbar, NImage } from 'naive-ui'
+import {
+  create,
+  NButton,
+  NMessageProvider,
+  NScrollbar,
+  NImage,
+  NSkeleton,
+  NBackTop
+} from 'naive-ui'
 
 const pinia = createPinia()
 const naive = create({
-  components: [NButton, NMessageProvider, NScrollbar, NImage]
+  components: [NButton, NMessageProvider, NScrollbar, NImage, NSkeleton, NBackTop]
 })
 
 // 添加全局图片预览事件

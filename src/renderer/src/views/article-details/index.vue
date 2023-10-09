@@ -1,11 +1,11 @@
 <script setup>
-import axios from 'axios'
 import { debounce } from 'lodash'
 import { useRoute } from 'vue-router'
 import { useMessage } from 'naive-ui'
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import { useLoginStore } from '@renderer/pinia/login'
 import { asyncClipboardUtils } from 'async-clipboard-utils'
+import fixedMenu from '@renderer/components/fixed-menu/index.vue'
 
 const route = useRoute()
 const answerList = ref([])
@@ -21,37 +21,60 @@ const isAddFirstArticleDetail = ref(true)
 
 console.log(route.params)
 
-const getArticleDetail = async function (cursor = '') {
+const getArticleDetail = async function () {
+  let result = null
   const { acc_cookie } = await window.api.store.get(loginStore.localCacheKey)
-  const res = await window.api.http.getArticleDetails(
-    route.params.questionId,
-    {
-      limit: 3,
-      order: 'default',
-      platform: 'desktop'
-    },
-    'z_c0=' + acc_cookie + ';'
-  )
-  const obj = JSON.parse(res)
 
-  // 是否到底部
-  if (obj.paging.is_end === true) {
-    answerIsEnd.value = true
-  }
+  // 如果是第一次发送请求
+  if (interfaceParams.value.answerSessionId.length === 0) {
+    const res = await window.api.http.getArticleDetails(
+      route.params.questionId,
+      {
+        offset: null,
+        limit: 3,
+        order: 'default',
+        platform: 'desktop'
+      },
+      'z_c0=' + acc_cookie + ';'
+    )
+    result = JSON.parse(res)
 
-  console.error(obj)
-  interfaceParams.value.answerSessionId = obj.session.id
-  interfaceParams.value.httpUrl = obj.session.next
-  answerList.value = [...answerList.value, ...obj.data]
+    // 获取下次请求url和session
+    interfaceParams.value.answerSessionId = result.session.id
+    interfaceParams.value.httpUrl = result.paging.next
+    answerList.value = [...answerList.value, ...result.data]
 
-  // 获取存储,把上个页面展示的数据放到第一个展示
-  const articleDetail = window.localStorage.getItem('article-detail')
-  if (articleDetail.length > 0 && isAddFirstArticleDetail) {
-    const obj = JSON.parse(articleDetail)
-    answerList.value = answerList.value.filter((item) => item.target.id !== obj.target.id)
-    obj.target.excerpt = obj.target.content
-    answerList.value.unshift(obj)
-    isAddFirstArticleDetail.value = false
+    // 获取存储,把上个页面展示的数据放到第一个展示
+    const articleDetail = window.localStorage.getItem('article-detail')
+    if (articleDetail.length > 0 && isAddFirstArticleDetail) {
+      const obj = JSON.parse(articleDetail)
+      answerList.value = answerList.value.filter((item) => item.target.id !== obj.target.id)
+      obj.target.excerpt = obj.target.content
+      answerList.value.unshift(obj)
+      isAddFirstArticleDetail.value = false
+    }
+
+    nextTick(() => {
+      const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
+      scroll.addEventListener('scroll', debounce(handleScroll, 1000))
+    })
+  } else {
+    interfaceParams.value.answerSessionId.length > 0
+    // 如果是获取剩余问题
+    const res = await window.api.http.getArticleDetailsByPage(
+      interfaceParams.value.httpUrl,
+      'z_c0=' + acc_cookie + ';'
+    )
+    result = JSON.parse(res)
+
+    //判断本次是否是最后一页
+    if (result.paging.is_end === true) {
+      answerIsEnd.value = true
+    }
+    // 获取下次请求url和session
+    interfaceParams.value.answerSessionId = result.session.id
+    interfaceParams.value.httpUrl = result.paging.next
+    answerList.value = [...answerList.value, ...result.data]
   }
 
   if (answerList.value.length > 0) {
@@ -76,10 +99,7 @@ const getArticleDetail = async function (cursor = '') {
 
   createPreDocument()
 
-  const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
-  scroll.addEventListener('scroll', debounce(handleScroll, 1000))
-
-  console.log(answerList.value)
+  console.log(result)
 }
 
 // 生成代码区域生成copy等按钮
@@ -150,9 +170,8 @@ const handleScroll = ({ target }) => {
     return
   }
 
-  if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
-    // getRecommend()
-    getArticleDetail(answerList.value[answerList.value.length - 1].cursor)
+  if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.95) {
+    getArticleDetail()
   }
 }
 
@@ -176,8 +195,16 @@ watch(
         <div v-for="(item, index) of answerList" :key="index" class="answer-list">
           <div class="answer" v-html="item.target.excerpt"></div>
         </div>
+        <div v-if="answerIsEnd === false" class="answer-list loading">
+          <div class="answer">
+            <n-skeleton text :repeat="2" />
+            <n-skeleton text style="width: 60%" />
+          </div>
+        </div>
       </div>
+      <n-back-top :right="100" />
     </n-scrollbar>
+    <fixedMenu />
   </div>
 </template>
 
@@ -224,6 +251,10 @@ watch(
 
       .answer {
       }
+    }
+
+    .loading {
+      border-bottom: none;
     }
   }
 }

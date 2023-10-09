@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 
-import { recommend, getArticleDetails } from '../api/index'
+import { recommend, getArticleDetails, getArticleDetailsByPage } from '../api/index'
 import { getStore, delStore, hasStore, setStore } from '../module/store'
 
 const storeIpc = function () {
@@ -17,6 +17,7 @@ const storeIpc = function () {
 const http = function () {
   ipcMain.handle('http:recommend', recommend)
   ipcMain.handle('http:getArticleDetails', getArticleDetails)
+  ipcMain.handle('http:getArticleDetailsByPage', getArticleDetailsByPage)
 }
 
 export { storeIpc, http }
