@@ -16,12 +16,25 @@ import {
   NScrollbar,
   NImage,
   NSkeleton,
-  NBackTop
+  NBackTop,
+  NPopover,
+  NList,
+  NListItem
 } from 'naive-ui'
 
 const pinia = createPinia()
 const naive = create({
-  components: [NButton, NMessageProvider, NScrollbar, NImage, NSkeleton, NBackTop]
+  components: [
+    NButton,
+    NMessageProvider,
+    NScrollbar,
+    NImage,
+    NSkeleton,
+    NBackTop,
+    NPopover,
+    NList,
+    NListItem
+  ]
 })
 
 // 添加全局图片预览事件

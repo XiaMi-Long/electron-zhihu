@@ -12,6 +12,8 @@ const answerList = ref([])
 const answerTitle = ref('')
 const message = useMessage()
 const answerIsEnd = ref(false)
+const openBrowserUrl = ref('')
+
 const interfaceParams = ref({
   answerSessionId: '',
   httpUrl: ''
@@ -30,10 +32,12 @@ const getArticleDetail = async function () {
     const res = await window.api.http.getArticleDetails(
       route.params.questionId,
       {
-        offset: null,
-        limit: 3,
+        offset: 0,
+        limit: 5,
         order: 'default',
-        platform: 'desktop'
+        platform: 'desktop',
+        include:
+          'data[*].is_normal,admin_closed_comment,reward_info,is_collapsed,annotation_action,annotation_detail,collapse_reason,is_sticky,collapsed_by,suggest_edit,comment_count,can_comment,content,editable_content,attachment,voteup_count,reshipment_settings,comment_permission,created_time,updated_time,review_info,relevant_info,question,excerpt,is_labeled,paid_info,paid_info_content,reaction_instruction,relationship.is_authorized,is_author,voting,is_thanked,is_nothelp;data[*].mark_infos[*].url;data[*].author.follower_count,vip_info,badge[*].topics;data[*].settings.table_of_content.enabled'
       },
       'z_c0=' + acc_cookie + ';'
     )
@@ -49,7 +53,6 @@ const getArticleDetail = async function () {
     if (articleDetail.length > 0 && isAddFirstArticleDetail) {
       const obj = JSON.parse(articleDetail)
       answerList.value = answerList.value.filter((item) => item.target.id !== obj.target.id)
-      obj.target.excerpt = obj.target.content
       answerList.value.unshift(obj)
       isAddFirstArticleDetail.value = false
     }
@@ -59,7 +62,6 @@ const getArticleDetail = async function () {
       scroll.addEventListener('scroll', debounce(handleScroll, 1000))
     })
   } else {
-    interfaceParams.value.answerSessionId.length > 0
     // 如果是获取剩余问题
     const res = await window.api.http.getArticleDetailsByPage(
       interfaceParams.value.httpUrl,
@@ -78,18 +80,25 @@ const getArticleDetail = async function () {
   }
 
   if (answerList.value.length > 0) {
-    answerTitle.value = answerList.value[0].target.question.title
+    if (answerTitle.value.length === 0) {
+      answerTitle.value = answerList.value[0].target.question.title
+    }
+
+    if (openBrowserUrl.value.length === 0) {
+      openBrowserUrl.value =
+        'https://www.zhihu.com/question/' + answerList.value[0].target.question.id
+    }
   }
 
   // 对每一项的回答图片做处理
   answerList.value.forEach((item) => {
     const regex = /<figure[^>]*>(.*?)<img src=\"(.*?)\"[^>]*>(.*?)<\/figure>/g
-    const text = item.target.excerpt
+    const text = item.target.content
     // 使用replace方法替换匹配到的内容
     const newText = text.replace(regex, function (match, p1, p2, p3) {
-      return `<div data-v-0ef3d734="" class="img n-image" role="none"><img onclick="previewPhoto(event)" src="${p2}" loading="eager" data-error="false" data-preview-src="${p2}" data-group-id="" style="object-fit: fill;"><!----><!----></div>`
+      return `<div data-v-0ef3d734="" class="img n-image" role="none"><img class="fixed-width" onclick="previewPhoto(event)" src="${p2}" loading="eager" data-error="false" data-preview-src="${p2}" data-group-id="" style="object-fit: fill;"><!----><!----></div>`
     })
-    item.target.excerpt = newText
+    item.target.content = newText
   })
 
   // 对文章代码片段进行处理
@@ -193,7 +202,7 @@ watch(
       <div class="container">
         <div class="questionTitle">{{ answerTitle }}</div>
         <div v-for="(item, index) of answerList" :key="index" class="answer-list">
-          <div class="answer" v-html="item.target.excerpt"></div>
+          <div class="answer" v-html="item.target.content"></div>
         </div>
         <div v-if="answerIsEnd === false" class="answer-list loading">
           <div class="answer">
@@ -204,7 +213,7 @@ watch(
       </div>
       <n-back-top :right="100" />
     </n-scrollbar>
-    <fixedMenu />
+    <fixedMenu :data="['back', 'token', 'open']" :open-browser-url="openBrowserUrl" />
   </div>
 </template>
 
@@ -313,5 +322,9 @@ watch(
   position: fixed;
 
   z-index: 10;
+}
+
+.fixed-width {
+  width: 100%;
 }
 </style>

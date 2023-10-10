@@ -1,7 +1,8 @@
 import { ipcMain } from 'electron'
 
-import { recommend, getArticleDetails, getArticleDetailsByPage } from '../api/index'
+import { openExternal } from '../module/shell'
 import { getStore, delStore, hasStore, setStore } from '../module/store'
+import { recommend, getArticleDetails, getArticleDetailsByPage } from '../api/index'
 
 const storeIpc = function () {
   //  store
@@ -20,4 +21,8 @@ const http = function () {
   ipcMain.handle('http:getArticleDetailsByPage', getArticleDetailsByPage)
 }
 
-export { storeIpc, http }
+const shells = function () {
+  ipcMain.on('shell:openExternal', openExternal)
+}
+
+export { storeIpc, http, shells }

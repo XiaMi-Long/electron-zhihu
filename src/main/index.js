@@ -1,7 +1,7 @@
 import { join } from 'path'
 
 // store-ipc
-import { storeIpc, http } from './ipc/index'
+import { storeIpc, http, shells } from './ipc/index'
 
 // image
 import appIcon from '../../resources/image/L.L.ico?asset'
@@ -79,6 +79,8 @@ app.whenReady().then(async () => {
   storeIpc()
   // 初始化http请求的ipc通信
   http()
+  // 初始化使用sheel的操作方法
+  shells()
 
   const mainWindow = createWindow()
 

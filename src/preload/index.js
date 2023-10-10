@@ -15,6 +15,9 @@ const api = {
       ipcRenderer.invoke('http:getArticleDetails', questionId, params, cookie),
     getArticleDetailsByPage: (url, cookie) =>
       ipcRenderer.invoke('http:getArticleDetailsByPage', url, cookie)
+  },
+  shell: {
+    openExternal: (url) => ipcRenderer.send('shell:openExternal', url)
   }
 }
 

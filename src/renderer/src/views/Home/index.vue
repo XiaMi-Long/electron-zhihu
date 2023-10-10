@@ -4,6 +4,7 @@ import { question } from './test'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@renderer/pinia/login'
+import fixedMenu from '@renderer/components/fixed-menu/index.vue'
 
 const page = ref({
   pageNumber: 2
@@ -38,7 +39,6 @@ const getRecommend = async function () {
 const getRecommendTest = async function () {
   const obj = question
   bodyList.value = obj
-  console.log(obj)
 }
 
 // 定义处理滚动事件的函数
@@ -91,6 +91,8 @@ onMounted(() => {
         </div>
       </div>
     </n-scrollbar>
+
+    <fixedMenu :data="['token']" />
   </div>
 </template>
 
