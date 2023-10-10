@@ -25,6 +25,10 @@ const setToken = function () {
   window.api.store.del(loginStore.localCacheKey)
   router.replace('/')
 }
+
+const goThemeConfig = function () {
+  router.push('/config')
+}
 </script>
 
 <template>
@@ -42,6 +46,13 @@ const setToken = function () {
         </n-list-item>
         <n-list-item v-if="props.data.includes('token')" class="list-item-box" @click="setToken">
           重新设置token
+        </n-list-item>
+        <n-list-item
+          v-if="props.data.includes('config')"
+          class="list-item-box"
+          @click="goThemeConfig"
+        >
+          页面样式配置
         </n-list-item>
       </n-list>
     </div>

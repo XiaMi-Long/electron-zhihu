@@ -92,7 +92,7 @@ onMounted(() => {
       </div>
     </n-scrollbar>
 
-    <fixedMenu :data="['token']" />
+    <fixedMenu :data="['token', 'config']" />
   </div>
 </template>
 
@@ -101,7 +101,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 
-  background-color: #f6f6f6;
+  background-color: var(--a-back);
 
   overflow: auto;
   .container {
@@ -118,14 +118,16 @@ onMounted(() => {
       width: 100%;
       min-height: 150px;
 
-      background-color: #ffffff;
+      background-color: var(--b-back);
 
-      border-bottom: 1px solid #f6f4f4;
+      border-bottom: 1px solid var(--border-bottom-color);
 
       padding: 10px 20px 20px 20px;
 
       .title {
         font-weight: bold;
+
+        color: var(--title-color);
       }
 
       .article {
@@ -146,6 +148,8 @@ onMounted(() => {
 
         .right {
           font-size: 12px;
+
+          color: var(--title-answer-text);
         }
       }
     }

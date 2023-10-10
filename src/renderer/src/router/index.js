@@ -38,6 +38,15 @@ const routes = [
       title: '文章详情',
       keepAlive: false
     }
+  },
+  {
+    name: 'config',
+    path: '/config',
+    component: () => import('@renderer/views/theme-config/index.vue'),
+    meta: {
+      title: '配置',
+      keepAlive: false
+    }
   }
 ]
 

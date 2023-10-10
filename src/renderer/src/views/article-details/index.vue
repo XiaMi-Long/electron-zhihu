@@ -213,7 +213,7 @@ watch(
       </div>
       <n-back-top :right="100" />
     </n-scrollbar>
-    <fixedMenu :data="['back', 'token', 'open']" :open-browser-url="openBrowserUrl" />
+    <fixedMenu :data="['back', 'token', 'open', 'cofig']" :open-browser-url="openBrowserUrl" />
   </div>
 </template>
 
@@ -222,7 +222,7 @@ watch(
   width: 100%;
   height: 100%;
 
-  background-color: #f6f6f6;
+  background-color: var(--a-back);
 
   overflow: auto;
   .container {
@@ -238,9 +238,9 @@ watch(
 
       border-radius: 5px;
 
-      background-color: #86c5a2;
+      background-color: var(--b-back);
 
-      color: white;
+      color: var(--title-color);
 
       padding: 20px;
     }
@@ -251,12 +251,10 @@ watch(
       width: 100%;
       min-height: 150px;
 
-      background-color: #ffffff;
-
-      border-bottom: 1px solid #f6f4f4;
+      background-color: var(--b-back);
 
       padding: 10px 20px 20px 20px;
-      border-bottom: 1px #8fa18f dashed;
+      border-bottom: 1px var(--border-bottom-color) dashed;
 
       .answer {
       }
