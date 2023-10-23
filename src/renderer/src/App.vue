@@ -2,15 +2,16 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@renderer/pinia/login'
+import { useStyleStore } from '@renderer/pinia/style'
 import { Colors, coloredLog } from '@renderer/util/log'
 import { getAllKeepAlive } from '@renderer/router/index'
 
 const router = useRouter()
 const loginStore = useLoginStore()
+const styleStore = useStyleStore()
 
 // 先判断本地缓存中是否有
 const getLocal = async function () {
-  // window.api.store.del(loginStore.localCacheKey)
   const hasLocal = await window.api.store.has(loginStore.localCacheKey)
   if (hasLocal) {
     const { acc_token, acc_cookie } = await window.api.store.get(loginStore.localCacheKey)
@@ -31,8 +32,30 @@ const getLocal = async function () {
   }
 }
 
+// 获取本地样式记录
+const setLocalStyle = async function () {
+  const hasLocal = await window.api.store.has(styleStore.localCacheKey)
+  if (hasLocal) {
+    const style = await window.api.store.get(styleStore.localCacheKey)
+    styleStore.watchStyle()
+    styleStore.style = style
+    console.log(styleStore.style)
+  }
+
+  if (!hasLocal) {
+    window.api.store.set(styleStore.localCacheKey, {
+      title: 'black',
+      answerText: 'black',
+      a: '#f6f6f6',
+      b: '#ffffff',
+      borderBottom: '#f6f4f4'
+    })
+  }
+}
+
 onMounted(() => {
   getLocal()
+  setLocalStyle()
 })
 </script>
 
@@ -50,5 +73,5 @@ onMounted(() => {
 
 <style lang="scss">
 @import './assets/css/styles.scss';
-@import './assets/css//base.scss';
+@import './assets/css/base.scss';
 </style>
