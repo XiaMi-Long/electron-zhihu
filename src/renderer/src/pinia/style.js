@@ -6,7 +6,7 @@ export const useStyleStore = defineStore('style', {
   // 其他配置...
   state: () => {
     return {
-      style: {},
+      dark: false,
       // 本地缓存key常量名
       localCacheKey: 'STYLE'
     }
@@ -16,14 +16,24 @@ export const useStyleStore = defineStore('style', {
     watchStyle() {
       // 使用watch函数，传入一个匿名函数，返回style的值
       watch(
-        () => this.style,
+        () => this.dark,
         (newStyle) => {
           const setCss = new cssVarUtils()
-          setCss.setVar('--title-color', newStyle.title)
-          setCss.setVar('--title-answer-text', newStyle.answerText)
-          setCss.setVar('--a-back', newStyle.a)
-          setCss.setVar('--b-back', newStyle.b)
-          setCss.setVar('--border-bottom-color', newStyle.borderBottom)
+          if (newStyle) {
+            setCss.setVar('--title-color', 'lightgrey')
+            setCss.setVar('--title-answer-text', '#a3a3a3')
+            setCss.setVar('--a-back', '#2a272b')
+            setCss.setVar('--b-back', '#2a272b')
+            setCss.setVar('--border-bottom-color', '#2a272b')
+          }
+
+          if (!newStyle) {
+            setCss.setVar('--title-color', 'black')
+            setCss.setVar('--title-answer-text', 'black')
+            setCss.setVar('--a-back', '#f6f6f6')
+            setCss.setVar('--b-back', '#d9d9d9')
+            setCss.setVar('--border-bottom-color', '#f6f4f4')
+          }
         }
       )
     }

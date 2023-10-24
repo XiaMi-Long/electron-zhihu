@@ -1,68 +1,47 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 import { useStyleStore } from '@renderer/pinia/style'
 import fixedMenu from '@renderer/components/fixed-menu/index.vue'
 
 const styleStore = useStyleStore()
 
-const defaultColor = {
-  title: 'black',
-  answerText: 'black',
-  a: '#f6f6f6',
-  b: '#ffffff',
-  borderBottom: '#f6f4f4'
-}
-
 const configForm = ref({
-  title: '',
-  answerText: '',
-  a: '',
-  b: '',
-  borderBottom: ''
+  dark: true
 })
 
-const confirm = function () {
-  window.api.store.set(styleStore.localCacheKey, {
-    title: configForm.value.title,
-    answerText: configForm.value.answerText,
-    a: configForm.value.a,
-    b: configForm.value.b,
-    borderBottom: configForm.value.borderBottom
-  })
-
-  styleStore.style = {
-    title: configForm.value.title,
-    answerText: configForm.value.answerText,
-    a: configForm.value.a,
-    b: configForm.value.b,
-    borderBottom: configForm.value.borderBottom
+const railStyle = function ({ focused, checked }) {
+  const style = {}
+  if (checked) {
+    style.background = '#403e41'
+    if (focused) {
+      style.boxShadow = '#403e41d9'
+    }
+  } else {
+    style.background = '#4098fc'
+    if (focused) {
+      style.boxShadow = '#4098fcb3'
+    }
   }
+  return style
 }
 
-const reset = function () {
-  window.api.store.set(styleStore.localCacheKey, {
-    title: defaultColor.title,
-    answerText: defaultColor.answerText,
-    a: defaultColor.a,
-    b: defaultColor.b,
-    borderBottom: defaultColor.borderBottom
-  })
+onMounted(() => {
+  configForm.value.dark = styleStore.dark
+})
 
-  styleStore.style = {
-    title: defaultColor.title,
-    answerText: defaultColor.answerText,
-    a: defaultColor.a,
-    b: defaultColor.b,
-    borderBottom: defaultColor.borderBottom
+watch(
+  () => configForm.value.dark,
+  (newVal) => {
+    if (newVal) {
+      styleStore.dark = true
+    }
+
+    if (!newVal) {
+      styleStore.dark = false
+    }
   }
-
-  configForm.value.title = defaultColor.title
-  configForm.value.answerText = defaultColor.answerText
-  configForm.value.a = defaultColor.a
-  configForm.value.b = defaultColor.b
-  configForm.value.borderBottom = defaultColor.borderBottom
-}
+)
 </script>
 
 <template>
@@ -72,81 +51,27 @@ const reset = function () {
         <div class="config-form">
           <div class="list">
             <div class="text">
-              <span>标题</span>
+              <span>夜间模式</span>
             </div>
             <div class="color">
-              <n-color-picker
-                :modes="['hex']"
-                v-model:value="configForm.title"
-                :show-preview="true"
-                :show-alpha="false"
-              />
+              <n-switch v-model:value="configForm.dark" :rail-style="railStyle" class="dark-mask">
+                <template #unchecked> light </template>
+                <template #checked> dark </template>
+              </n-switch>
             </div>
           </div>
-
-          <div class="list">
-            <div class="text">
-              <span>回答</span>
-            </div>
-            <div class="color">
-              <n-color-picker
-                :modes="['hex']"
-                v-model:value="configForm.answerText"
-                :show-preview="true"
-                :show-alpha="false"
-              />
-            </div>
-          </div>
-
-          <div class="list">
-            <div class="text">
-              <span>区域A</span>
-            </div>
-            <div class="color">
-              <n-color-picker
-                :modes="['hex']"
-                v-model:value="configForm.a"
-                :show-preview="true"
-                :show-alpha="false"
-              />
-            </div>
-          </div>
-
-          <div class="list">
-            <div class="text">
-              <span>区域B</span>
-            </div>
-            <div class="color">
-              <n-color-picker
-                :modes="['hex']"
-                v-model:value="configForm.b"
-                :show-preview="true"
-                :show-alpha="false"
-              />
-            </div>
-          </div>
-
-          <div class="list">
-            <div class="text">
-              <span>下边框</span>
-            </div>
-            <div class="color">
-              <n-color-picker
-                :modes="['hex']"
-                v-model:value="configForm.borderBottom"
-                :show-preview="true"
-                :show-alpha="false"
-              />
-            </div>
-          </div>
-          <n-space justify="center" size="large">
+          <!-- <n-space justify="center" size="large">
             <n-button type="" @click="reset"> 重置 </n-button>
             <n-button type="info" @click="confirm"> 确定 </n-button>
-          </n-space>
+          </n-space> -->
         </div>
+
+        <div class="style-preview"></div>
       </div>
     </n-scrollbar>
     <fixedMenu :data="['back']" />
+
+    <div class="mask"></div>
   </div>
 </template>
 
@@ -179,13 +104,37 @@ const reset = function () {
       .list {
         display: flex;
         align-items: center;
-        justify-content: space-around;
+        justify-content: space-evenly;
 
+        color: var(--title-color);
         .color {
-          width: 70%;
         }
       }
     }
   }
+}
+
+.mask {
+  position: fixed;
+
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+
+  /* 背景颜色为黑色 */
+  background-color: rgba(0, 0, 0, 0.8);
+
+  visibility: hidden;
+
+  transition: visibility 1s;
+}
+
+.dark-mask {
+  position: relative;
+}
+.dark-mask::after {
+  content: '';
 }
 </style>

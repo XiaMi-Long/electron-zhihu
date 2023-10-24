@@ -21,7 +21,8 @@ import {
   NList,
   NListItem,
   NColorPicker,
-  NSpace
+  NSpace,
+  NSwitch
 } from 'naive-ui'
 
 const pinia = createPinia()
@@ -37,7 +38,8 @@ const naive = create({
     NList,
     NListItem,
     NColorPicker,
-    NSpace
+    NSpace,
+    NSwitch
   ]
 })
 

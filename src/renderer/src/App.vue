@@ -34,22 +34,18 @@ const getLocal = async function () {
 
 // 获取本地样式记录
 const setLocalStyle = async function () {
+  // window.api.store.del(styleStore.localCacheKey)
   const hasLocal = await window.api.store.has(styleStore.localCacheKey)
   if (hasLocal) {
-    const style = await window.api.store.get(styleStore.localCacheKey)
+    const dark = await window.api.store.get(styleStore.localCacheKey)
     styleStore.watchStyle()
-    styleStore.style = style
-    console.log(styleStore.style)
+    styleStore.style = dark
+
+    console.log(dark)
   }
 
   if (!hasLocal) {
-    window.api.store.set(styleStore.localCacheKey, {
-      title: 'black',
-      answerText: 'black',
-      a: '#f6f6f6',
-      b: '#ffffff',
-      borderBottom: '#f6f4f4'
-    })
+    window.api.store.set(styleStore.localCacheKey, false)
   }
 }
 
