@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-
+import { cssVarUtils } from '@renderer/util/css.js'
 import { useStyleStore } from '@renderer/pinia/style'
 import fixedMenu from '@renderer/components/fixed-menu/index.vue'
 
@@ -9,6 +9,8 @@ const styleStore = useStyleStore()
 const configForm = ref({
   dark: true
 })
+const mark = ref(null)
+const disabledDark = ref(false)
 
 const railStyle = function ({ focused, checked }) {
   const style = {}
@@ -26,22 +28,55 @@ const railStyle = function ({ focused, checked }) {
   return style
 }
 
-onMounted(() => {
-  configForm.value.dark = styleStore.dark
-})
+const showDark = function () {
+  mark.value.style.borderColor = '#2a272b73'
+  mark.value.style.visibility = 'inherit'
+  mark.value.classList.add('showDark')
 
-watch(
-  () => configForm.value.dark,
-  (newVal) => {
-    if (newVal) {
+  const setCss = new cssVarUtils()
+  setCss.setVar('--title-color', 'lightgrey')
+}
+
+const showLight = function () {
+  styleStore.dark = false
+  mark.value.style.visibility = 'inherit'
+  mark.value.classList.add('showLight')
+}
+
+const onMarkAnimationendEvent = function () {
+  mark.value.addEventListener('animationend', function (event) {
+    if (event.animationName.includes('showlight')) {
+      mark.value.style.visibility = 'hidden'
+      mark.value.classList.remove('showLight')
+    }
+
+    if (event.animationName.includes('showdark')) {
+      mark.value.style.visibility = 'hidden'
+      mark.value.classList.remove('showDark')
       styleStore.dark = true
     }
+    disabledDark.value = false
+  })
+}
 
-    if (!newVal) {
-      styleStore.dark = false
+onMounted(() => {
+  configForm.value.dark = styleStore.dark
+  onMarkAnimationendEvent()
+
+  watch(
+    () => configForm.value.dark,
+    (newVal) => {
+      disabledDark.value = true
+      if (newVal) {
+        showDark()
+      }
+
+      if (!newVal) {
+        showLight()
+      }
     }
-  }
-)
+  )
+})
 </script>
 
 <template>
@@ -54,7 +89,12 @@ watch(
               <span>夜间模式</span>
             </div>
             <div class="color">
-              <n-switch v-model:value="configForm.dark" :rail-style="railStyle" class="dark-mask">
+              <n-switch
+                v-model:value="configForm.dark"
+                :disabled="disabledDark"
+                :rail-style="railStyle"
+                class="dark-mask"
+              >
                 <template #unchecked> light </template>
                 <template #checked> dark </template>
               </n-switch>
@@ -71,7 +111,7 @@ watch(
     </n-scrollbar>
     <fixedMenu :data="['back']" />
 
-    <div class="mask"></div>
+    <div ref="mark" class="mask"></div>
   </div>
 </template>
 
@@ -106,6 +146,9 @@ watch(
         align-items: center;
         justify-content: space-evenly;
 
+        z-index: 2;
+        position: relative;
+
         color: var(--title-color);
         .color {
         }
@@ -117,24 +160,50 @@ watch(
 .mask {
   position: fixed;
 
-  width: 100%;
-  height: 100%;
+  width: 1px;
+  height: 1px;
 
-  top: 0;
-  left: 0;
+  /* border-radius: 50%; */
+  top: -60px;
+  left: -60px;
 
-  /* 背景颜色为黑色 */
-  background-color: rgba(0, 0, 0, 0.8);
+  border: 10px solid #2a272b73;
+
+  background: #2a272b;
+
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
 
   visibility: hidden;
-
-  transition: visibility 1s;
 }
 
-.dark-mask {
-  position: relative;
+.showDark {
+  animation: showdark 1.5s;
 }
-.dark-mask::after {
-  content: '';
+
+@keyframes showdark {
+  0% {
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+  }
+  100% {
+    border-left-width: 150vw;
+    border-bottom-width: 150vh;
+  }
+}
+
+.showLight {
+  animation: showlight 1.5s;
+}
+
+@keyframes showlight {
+  0% {
+    border-left-width: 150vw;
+    border-bottom-width: 150vh;
+  }
+  100% {
+    border-left-width: 1px;
+    border-bottom-width: 1px;
+  }
 }
 </style>

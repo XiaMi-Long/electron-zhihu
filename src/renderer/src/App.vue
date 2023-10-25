@@ -39,9 +39,8 @@ const setLocalStyle = async function () {
   if (hasLocal) {
     const dark = await window.api.store.get(styleStore.localCacheKey)
     styleStore.watchStyle()
-    styleStore.style = dark
-
-    console.log(dark)
+    styleStore.dark = dark
+    coloredLog(`当前的背景为${dark ? '暗色' : '亮色'}`, Colors.YELLOW)
   }
 
   if (!hasLocal) {

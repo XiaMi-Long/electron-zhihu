@@ -38,15 +38,16 @@ const goThemeConfig = function () {
     </template>
     <div>
       <n-list>
+        <n-list-item v-if="props.data.includes('token')" class="list-item-box" @click="setToken">
+          重新设置token
+        </n-list-item>
         <n-list-item v-if="props.data.includes('back')" class="list-item-box" @click="back">
           返回上一个页面
         </n-list-item>
         <n-list-item v-if="props.data.includes('open')" class="list-item-box" @click="openBrowser">
           用浏览器打开此页面
         </n-list-item>
-        <n-list-item v-if="props.data.includes('token')" class="list-item-box" @click="setToken">
-          重新设置token
-        </n-list-item>
+
         <n-list-item
           v-if="props.data.includes('config')"
           class="list-item-box"
@@ -61,6 +62,8 @@ const goThemeConfig = function () {
 
 <style scoped lang="scss">
 .fixed-menu {
+  z-index: 2;
+
   position: fixed;
   width: 44px;
   height: 44px;

@@ -25,14 +25,16 @@ export const useStyleStore = defineStore('style', {
             setCss.setVar('--a-back', '#2a272b')
             setCss.setVar('--b-back', '#2a272b')
             setCss.setVar('--border-bottom-color', '#2a272b')
+            window.api.store.set(this.localCacheKey, true)
           }
 
           if (!newStyle) {
             setCss.setVar('--title-color', 'black')
             setCss.setVar('--title-answer-text', 'black')
             setCss.setVar('--a-back', '#f6f6f6')
-            setCss.setVar('--b-back', '#d9d9d9')
+            setCss.setVar('--b-back', '#ffffff')
             setCss.setVar('--border-bottom-color', '#f6f4f4')
+            window.api.store.set(this.localCacheKey, false)
           }
         }
       )
