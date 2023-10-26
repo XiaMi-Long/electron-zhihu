@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: electron-zhihu
+appId: v1.0.3
+productName: zhihu-reader
 directories:
   buildResources: build
 files:
@@ -11,7 +11,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: electron-zhihu
+  executableName: zhihu-reader
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -38,5 +38,5 @@ appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: ['github']
+  url: https://github.com/XiaMi-Long/electron-zhihu/releases

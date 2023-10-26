@@ -45,21 +45,7 @@ const naive = create({
   ]
 })
 
-// 添加全局图片预览事件
-window.previewPhoto = function (event) {
-  var img = document.createElement('img')
-  img.src = event.target.src
-  const viewer = new Viewer(img, {
-    hidden: function () {
-      const viewerContainer = document.querySelector('.viewer-container')
-      if (viewerContainer) {
-        viewerContainer.parentNode.removeChild(viewerContainer)
-      }
-    }
-  })
-  viewer.show()
-}
-
+window.Viewer = Viewer
 window.highlight = highlight
 
 createApp(App).use(router).use(naive).use(pinia).mount('#app')

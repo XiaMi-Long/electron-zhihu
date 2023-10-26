@@ -11,6 +11,7 @@ specifiers:
   animate.css: ^4.1.1
   async-clipboard-utils: ^1.0.5
   axios: ^1.5.0
+  cross-env: ^7.0.3
   dayjs: ^1.11.9
   electron: ^25.6.0
   electron-builder: ^24.6.3
@@ -52,6 +53,7 @@ devDependencies:
   '@vitejs/plugin-vue': 4.4.0_vite@4.5.0+vue@3.3.7
   '@vue/eslint-config-prettier': 8.0.0_kczejxwgxmlnbexn7agoqssrru
   ajv: 7.2.4
+  cross-env: 7.0.3
   electron: 25.9.3
   electron-builder: 24.6.4
   electron-vite: 1.0.28_vite@4.5.0
@@ -1473,6 +1475,14 @@ packages:
       buffer: 5.7.1
     dev: true
     optional: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: true
 
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}

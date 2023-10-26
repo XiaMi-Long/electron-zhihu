@@ -90,15 +90,23 @@ const getArticleDetail = async function () {
     }
   }
 
-  // 对每一项的回答图片做处理
   answerList.value.forEach((item) => {
+    // 对每一项的回答图片做处理
     const regex = /<figure[^>]*>(.*?)<img src=\"(.*?)\"[^>]*>(.*?)<\/figure>/g
     const text = item.target.content
     // 使用replace方法替换匹配到的内容
     const newText = text.replace(regex, function (match, p1, p2, p3) {
       return `<div data-v-0ef3d734="" class="img n-image" role="none"><img class="fixed-width" onclick="previewPhoto(event)" src="${p2}" loading="eager" data-error="false" data-preview-src="${p2}" data-group-id="" style="object-fit: fill;"><!----><!----></div>`
     })
-    item.target.content = newText
+
+    // 对每一项的a标签链接做处理
+    const regex2 = /<a href=\"(.*?)\"[^>]*>(.*?)<\/a>/g
+    const text2 = newText
+    // 使用replace方法替换匹配到的内容
+    const newText2 = text2.replace(regex2, function (match, p1, p2) {
+      return `<a href="${p1}" onclick="interceptHref(event)" class=" wrap external" target="_blank" rel="nofollow noreferrer" data-za-detail-view-id="1043">${p2}</a>`
+    })
+    item.target.content = newText2
   })
 
   // 对文章代码片段进行处理

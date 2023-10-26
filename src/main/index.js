@@ -9,6 +9,9 @@ import appIcon from '../../resources/image/L.L.ico?asset'
 // http
 import { startLogging, stopLogging } from './utils/http'
 
+// update
+import { checkUpdate } from './utils/electron-update'
+
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { app, shell, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 
@@ -53,6 +56,9 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+  //每次启动程序，就检查更新
+  checkUpdate()
+
   await startLogging()
 
   const appTray = new Tray(nativeImage.createFromPath(appIcon))

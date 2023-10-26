@@ -1,6 +1,7 @@
 <script setup>
 import { debounce } from 'lodash'
 import { question } from './test'
+import { useDialog } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@renderer/pinia/login'
@@ -11,6 +12,7 @@ const page = ref({
 })
 const bodyList = ref([])
 const router = useRouter()
+const dialog = useDialog()
 
 const loginStore = useLoginStore()
 
@@ -55,9 +57,39 @@ const goPage = function (item) {
   router.push(`/detail/${item.target.id}/question/${item.target.question.id}`)
 }
 
-// getRecommendTest()
+// 添加全局图片预览事件
+window.previewPhoto = function (event) {
+  var img = document.createElement('img')
+  img.src = event.target.src
+  const viewer = new window.Viewer(img, {
+    hidden: function () {
+      const viewerContainer = document.querySelector('.viewer-container')
+      if (viewerContainer) {
+        viewerContainer.parentNode.removeChild(viewerContainer)
+      }
+    }
+  })
+  viewer.show()
+}
+
+// 添加全局拦截的网页跳转
+window.interceptHref = function (event) {
+  const href = event.currentTarget.href
+  event.preventDefault()
+  dialog.warning({
+    title: '提 示',
+    content: '你正在准备跳转网页，链接会在你默认浏览器打开',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      window.api.shell.openExternal(href)
+    },
+    onNegativeClick: () => {}
+  })
+}
 
 onMounted(() => {
+  // getRecommendTest()
   getRecommend()
   const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
   scroll.addEventListener('scroll', debounce(handleScroll, 200))
