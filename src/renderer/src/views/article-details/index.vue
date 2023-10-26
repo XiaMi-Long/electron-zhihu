@@ -253,6 +253,8 @@ watch(
 
       background-color: var(--b-back);
 
+      color: var(--title-answer-text);
+
       padding: 10px 20px 20px 20px;
       border-bottom: 1px var(--border-bottom-color) dashed;
 

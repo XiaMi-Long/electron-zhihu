@@ -78,6 +78,11 @@ const getAllKeepAlive = function () {
         }
       })
     }
+    if (!item.children) {
+      if (item.meta.keepAlive) {
+        result.push(item.name)
+      }
+    }
   }
 
   return result

@@ -55,15 +55,17 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-message-provider>
-    <router-view v-slot="{ Component, route }">
-      <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
-        <KeepAlive :include="getAllKeepAlive()">
-          <component :is="Component" />
-        </KeepAlive>
-      </transition>
-    </router-view>
-  </n-message-provider>
+  <n-dialog-provider>
+    <n-message-provider>
+      <router-view v-slot="{ Component, route }">
+        <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
+          <KeepAlive :include="getAllKeepAlive()">
+            <component :is="Component" />
+          </KeepAlive>
+        </transition>
+      </router-view>
+    </n-message-provider>
+  </n-dialog-provider>
 </template>
 
 <style lang="scss">

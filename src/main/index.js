@@ -10,7 +10,7 @@ import appIcon from '../../resources/image/L.L.ico?asset'
 import { startLogging, stopLogging } from './utils/http'
 
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
+import { app, shell, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 
 function createWindow() {
   // Create the browser window.

@@ -1,4 +1,5 @@
 <script setup>
+import { useDialog } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useLoginStore } from '@renderer/pinia/login'
 
@@ -10,11 +11,12 @@ const props = defineProps({
   }
 })
 
+const dialog = useDialog()
 const router = useRouter()
 const loginStore = useLoginStore()
 
 const back = function () {
-  router.go(-1)
+  router.push(`/home`)
 }
 
 const openBrowser = function () {
@@ -22,8 +24,17 @@ const openBrowser = function () {
 }
 
 const setToken = function () {
-  window.api.store.del(loginStore.localCacheKey)
-  router.replace('/')
+  dialog.warning({
+    title: '提 示',
+    content: '你确定重新设置token吗？',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      window.api.store.del(loginStore.localCacheKey)
+      router.replace('/')
+    },
+    onNegativeClick: () => {}
+  })
 }
 
 const goThemeConfig = function () {

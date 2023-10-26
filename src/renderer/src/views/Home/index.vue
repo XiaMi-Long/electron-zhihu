@@ -45,7 +45,7 @@ const getRecommendTest = async function () {
 const handleScroll = ({ target }) => {
   if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
     page.value.pageNumber++
-    // getRecommend()
+    getRecommend()
   }
 }
 
@@ -55,13 +55,18 @@ const goPage = function (item) {
   router.push(`/detail/${item.target.id}/question/${item.target.question.id}`)
 }
 
-getRecommendTest()
-// getRecommend()
+// getRecommendTest()
 
 onMounted(() => {
+  getRecommend()
   const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
   scroll.addEventListener('scroll', debounce(handleScroll, 200))
 })
+</script>
+<script>
+export default {
+  name: 'Home'
+}
 </script>
 
 <template>
