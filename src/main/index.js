@@ -15,7 +15,7 @@ import { checkUpdate } from './utils/electron-update'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { app, shell, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 
-function createWindow() {
+function createWindow(loadingWindow) {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1000,
@@ -35,6 +35,8 @@ function createWindow() {
   }, 3000)
 
   mainWindow.on('ready-to-show', () => {
+    loadingWindow.close()
+    loadingWindow = null
     mainWindow.show()
   })
 
@@ -46,7 +48,7 @@ function createWindow() {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+    mainWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/index.html`)
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
@@ -54,11 +56,32 @@ function createWindow() {
   return mainWindow
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
+function createLoadingWindow() {
+  const loadingWindow = new BrowserWindow({
+    width: 1000,
+    height: 800,
+    show: true,
+    // autoHideMenuBar: true,
+    ...(process.platform === 'linux' ? { icon: appIcon } : {}),
+    icon: appIcon
+  })
+
+  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+    loadingWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/loading.html`)
+  } else {
+    loadingWindow.loadFile(join(__dirname, '../renderer/loading.html'))
+  }
+
+  loadingWindow.on('ready-to-show', () => {
+    loadingWindow.show()
+  })
+
+  return loadingWindow
+}
+
 app.whenReady().then(async () => {
   await startLogging()
+  let loadingWindow = createLoadingWindow()
 
   const appTray = new Tray(nativeImage.createFromPath(appIcon))
   // 监听点击托盘图标事件
@@ -89,7 +112,7 @@ app.whenReady().then(async () => {
   // 初始化应用更新的方法
   appInstall()
 
-  const mainWindow = createWindow()
+  const mainWindow = createWindow(loadingWindow)
   //每次启动程序，就检查更新
   checkUpdate(mainWindow)
 
