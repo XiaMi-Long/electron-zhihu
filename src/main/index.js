@@ -72,9 +72,7 @@ function createLoadingWindow() {
     loadingWindow.loadFile(join(__dirname, '../renderer/loading.html'))
   }
 
-  loadingWindow.on('ready-to-show', () => {
-    loadingWindow.show()
-  })
+  loadingWindow.show()
 
   return loadingWindow
 }
