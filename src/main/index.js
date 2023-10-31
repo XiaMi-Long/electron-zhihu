@@ -1,10 +1,10 @@
 import { join } from 'path'
 
 // store-ipc
-import { storeIpc, http, shells } from './ipc/index'
+import { storeIpc, http, shells, appInstall } from './ipc/index'
 
 // image
-import appIcon from '../../resources/image/L.L.ico?asset'
+import appIcon from '../../resources/image/e.ico?asset'
 
 // http
 import { startLogging, stopLogging } from './utils/http'
@@ -30,7 +30,9 @@ function createWindow() {
     icon: appIcon
   })
 
-  mainWindow.webContents.toggleDevTools()
+  setTimeout(() => {
+    mainWindow.webContents.toggleDevTools()
+  }, 3000)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -56,9 +58,6 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  //每次启动程序，就检查更新
-  checkUpdate()
-
   await startLogging()
 
   const appTray = new Tray(nativeImage.createFromPath(appIcon))
@@ -87,8 +86,12 @@ app.whenReady().then(async () => {
   http()
   // 初始化使用sheel的操作方法
   shells()
+  // 初始化应用更新的方法
+  appInstall()
 
   const mainWindow = createWindow()
+  //每次启动程序，就检查更新
+  checkUpdate(mainWindow)
 
   const mainWindowCloseHandler = (event) => {
     if (process.platform !== 'darwin') {

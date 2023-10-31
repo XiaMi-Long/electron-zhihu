@@ -4,6 +4,7 @@ import { question } from './test'
 import { useDialog } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useNotification } from 'naive-ui'
 import { useLoginStore } from '@renderer/pinia/login'
 import fixedMenu from '@renderer/components/fixed-menu/index.vue'
 
@@ -15,6 +16,7 @@ const router = useRouter()
 const dialog = useDialog()
 
 const loginStore = useLoginStore()
+const notification = useNotification()
 
 // window.api.store.del(loginStore.localCacheKey)
 // 获取推荐文章
@@ -47,7 +49,7 @@ const getRecommendTest = async function () {
 const handleScroll = ({ target }) => {
   if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
     page.value.pageNumber++
-    getRecommend()
+    // getRecommend()
   }
 }
 
@@ -88,9 +90,65 @@ window.interceptHref = function (event) {
   })
 }
 
+// 检测更新
+window.api.app.onAppCheckingForUpdate(() => {
+  notification.info({
+    content: '正在检测是否有更新.....',
+    closable: false
+  })
+})
+
+// 检测更新
+window.api.app.onAppUpdateNotAvailable(() => {
+  notification.destroyAll()
+  notification.info({
+    content: '当前已是最新版本',
+    closable: false
+  })
+
+  setTimeout(() => {
+    notification.destroyAll()
+  }, 4000)
+})
+
+window.api.app.onAppUpdateError(() => {
+  notification.destroyAll()
+  notification.error({
+    content: '更新失败，出现未知问题',
+    closable: false
+  })
+
+  setTimeout(() => {
+    notification.destroyAll()
+  }, 4000)
+})
+
+window.api.app.onAppUpdateAvailable(() => {
+  notification.destroyAll()
+  notification.info({
+    content: '发现新版本，开始下载更新.....',
+    closable: false
+  })
+})
+
+window.api.app.onAppUpdateDownloaded((event) => {
+  notification.destroyAll()
+
+  dialog.warning({
+    title: '提 示',
+    content: '更新下载完成，是否要重启安装应用',
+    positiveText: '确定',
+    negativeText: '取消',
+    onPositiveClick: () => {
+      event.sender.send('install-app')
+    },
+    onNegativeClick: () => {}
+  })
+})
+
 onMounted(() => {
-  // getRecommendTest()
-  getRecommend()
+  getRecommendTest()
+  // getRecommend()
   const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
   scroll.addEventListener('scroll', debounce(handleScroll, 200))
 })

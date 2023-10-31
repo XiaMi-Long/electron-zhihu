@@ -23,7 +23,8 @@ import {
   NColorPicker,
   NSpace,
   NSwitch,
-  NDialogProvider
+  NDialogProvider,
+  NNotificationProvider
 } from 'naive-ui'
 
 const pinia = createPinia()
@@ -41,7 +42,8 @@ const naive = create({
     NColorPicker,
     NSpace,
     NSwitch,
-    NDialogProvider
+    NDialogProvider,
+    NNotificationProvider
   ]
 })
 

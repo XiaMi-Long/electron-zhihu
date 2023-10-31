@@ -18,6 +18,14 @@ const api = {
   },
   shell: {
     openExternal: (url) => ipcRenderer.send('shell:openExternal', url)
+  },
+  app: {
+    onInstallApp: () => ipcRenderer.send('install-app'),
+    onAppUpdateError: (callBack) => ipcRenderer.on('app-update-error', callBack),
+    onAppUpdateAvailable: (callBack) => ipcRenderer.on('app-update-available', callBack),
+    onAppUpdateDownloaded: (callBack) => ipcRenderer.on('app-update-downloaded', callBack),
+    onAppCheckingForUpdate: (callBack) => ipcRenderer.on('app-checking-for-update', callBack),
+    onAppUpdateNotAvailable: (callBack) => ipcRenderer.on('app-update-not-available', callBack)
   }
 }
 

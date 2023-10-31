@@ -1,37 +1,32 @@
-import { app, dialog } from 'electron'
-const { autoUpdater } = require('electron-updater')
+import { autoUpdater } from 'electron-updater'
 
-export function checkUpdate() {
+export function checkUpdate(mainWindow) {
   //检测更新
   autoUpdater.checkForUpdates()
 
+  // 开始检测更新的时候
+  autoUpdater.on('checking-for-update', () => {
+    mainWindow.webContents.send('app-checking-for-update')
+  })
+
+  // 当没有可用更新的时候触发
+  autoUpdater.on('update-not-available', () => {
+    mainWindow.webContents.send('app-update-not-available')
+  })
+
   //监听'error'事件
-  autoUpdater.on('error', (err) => {
-    console.log(err)
+  autoUpdater.on('error', () => {
+    mainWindow.webContents.send('app-update-error')
   })
 
   //监听'update-available'事件，发现有新版本时触发
   autoUpdater.on('update-available', () => {
-    console.log('found new version')
+    mainWindow.webContents.send('app-update-available')
   })
 
   //默认会自动下载新版本，如果不想自动下载，设置autoUpdater.autoDownload = false
-
   //监听'update-downloaded'事件，新版本下载完成时触发
   autoUpdater.on('update-downloaded', () => {
-    dialog
-      .showMessageBox({
-        type: 'info',
-        title: '应用更新',
-        message: '发现新版本，是否更新？',
-        buttons: ['是', '否']
-      })
-      .then((buttonIndex) => {
-        if (buttonIndex.response == 0) {
-          //选择是，则退出程序，安装新版本
-          autoUpdater.quitAndInstall()
-          app.quit()
-        }
-      })
+    mainWindow.webContents.send('app-update-downloaded')
   })
 }

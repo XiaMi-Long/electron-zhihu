@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
 import { useLoginStore } from '@renderer/pinia/login'
 import { useStyleStore } from '@renderer/pinia/style'
 import { Colors, coloredLog } from '@renderer/util/log'
@@ -55,17 +56,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-dialog-provider>
-    <n-message-provider>
-      <router-view v-slot="{ Component, route }">
-        <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
-          <KeepAlive :include="getAllKeepAlive()">
-            <component :is="Component" />
-          </KeepAlive>
-        </transition>
-      </router-view>
-    </n-message-provider>
-  </n-dialog-provider>
+  <n-message-provider>
+    <n-notification-provider>
+      <n-dialog-provider>
+        <router-view v-slot="{ Component, route }">
+          <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
+            <KeepAlive :include="getAllKeepAlive()">
+              <component :is="Component" />
+            </KeepAlive>
+          </transition>
+        </router-view>
+      </n-dialog-provider>
+    </n-notification-provider>
+  </n-message-provider>
 </template>
 
 <style lang="scss">

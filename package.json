@@ -1,6 +1,6 @@
 {
   "name": "electron-zhihu",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "An Electron application with Vue",
   "main": "./out/main/index.js",
   "author": "wwy",
@@ -16,7 +16,7 @@
     "build:mac": "npm run build && electron-builder --mac --config",
     "build:linux": "npm run build && electron-builder --linux --config",
     "build:icon": "electron-icon-builder --input=resource/L.L.png --output=build --flatten",
-    "release": "cross-env GH_TOKEN=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 electron-builder"
+    "release": "electron-vite build && cross-env GH_TOKEN=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 electron-builder"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
@@ -53,10 +53,10 @@
   },
   "build": {
     "win": {
-      "icon": "icon.ico"
+      "icon": "build/e.ico"
     },
     "mac": {
-      "icon": "icon.icns"
+      "icon": "build/e.ico"
     }
   }
 }

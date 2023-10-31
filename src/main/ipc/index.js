@@ -1,5 +1,6 @@
 import { ipcMain } from 'electron'
 
+import { installApp } from '../module/app'
 import { openExternal } from '../module/shell'
 import { getStore, delStore, hasStore, setStore } from '../module/store'
 import { recommend, getArticleDetails, getArticleDetailsByPage } from '../api/index'
@@ -25,4 +26,8 @@ const shells = function () {
   ipcMain.on('shell:openExternal', openExternal)
 }
 
-export { storeIpc, http, shells }
+const appInstall = function () {
+  ipcMain.on('install-app', installApp)
+}
+
+export { storeIpc, http, shells, appInstall }
