@@ -60,7 +60,7 @@ onMounted(() => {
     <n-notification-provider>
       <n-dialog-provider>
         <router-view v-slot="{ Component, route }">
-          <transition name="fade" enter-active-class="animate__animated animate__fadeInDown">
+          <transition name="fade" enter-active-class=" ">
             <KeepAlive :include="getAllKeepAlive()">
               <component :is="Component" />
             </KeepAlive>

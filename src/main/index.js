@@ -16,23 +16,26 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { app, shell, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 
 function createWindow(loadingWindow) {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
-    show: true,
-    // autoHideMenuBar: true,
+    show: false,
+    center: true,
+    title: 'C.C.',
     ...(process.platform === 'linux' ? { icon: appIcon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      devTools: true,
+      scrollBounce: true
     },
     icon: appIcon
   })
+  mainWindow.setMenu(null)
 
   setTimeout(() => {
     mainWindow.webContents.toggleDevTools()
-  }, 3000)
+  }, 2000)
 
   mainWindow.on('ready-to-show', () => {
     loadingWindow.close()
@@ -60,11 +63,15 @@ function createLoadingWindow() {
   const loadingWindow = new BrowserWindow({
     width: 1000,
     height: 800,
-    show: true,
+    show: false,
+    transparent: true,
+    center: true,
+    title: 'C.C.',
     // autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon: appIcon } : {}),
     icon: appIcon
   })
+  loadingWindow.setMenu(null)
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     loadingWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/loading.html`)
@@ -72,25 +79,16 @@ function createLoadingWindow() {
     loadingWindow.loadFile(join(__dirname, '../renderer/loading.html'))
   }
 
-  loadingWindow.show()
+  loadingWindow.on('ready-to-show', () => {
+    loadingWindow.show()
+  })
 
   return loadingWindow
 }
 
 app.whenReady().then(async () => {
+  const loadingWindow = createLoadingWindow()
   await startLogging()
-  let loadingWindow = createLoadingWindow()
-
-  const appTray = new Tray(nativeImage.createFromPath(appIcon))
-  // 监听点击托盘图标事件
-  // 点击托盘图标时显示/隐藏应用窗口
-  appTray.on('click', () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide()
-    } else {
-      mainWindow.show()
-    }
-  })
 
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
@@ -134,6 +132,18 @@ app.whenReady().then(async () => {
       }
     }
   ])
+
+  const appTray = new Tray(nativeImage.createFromPath(appIcon))
+  // 监听点击托盘图标事件
+  // 点击托盘图标时显示/隐藏应用窗口
+  appTray.on('click', () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide()
+    } else {
+      mainWindow.show()
+    }
+  })
+
   appTray.setContextMenu(contextMenu)
 
   app.on('activate', function () {

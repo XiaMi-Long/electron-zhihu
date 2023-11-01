@@ -1,6 +1,10 @@
 <script setup>
 import { useDialog } from 'naive-ui'
 import { useRouter } from 'vue-router'
+import { FirefoxBrowser } from '@vicons/fa'
+import { ArrowBackUp } from '@vicons/tabler'
+import { KeyOutline } from '@vicons/ionicons5'
+import { DarkTheme20Filled } from '@vicons/fluent'
 import { useLoginStore } from '@renderer/pinia/login'
 
 const props = defineProps({
@@ -43,32 +47,51 @@ const goThemeConfig = function () {
 </script>
 
 <template>
-  <n-popover placement="top" trigger="hover" @update:show="true">
-    <template #trigger>
-      <div class="fixed-menu">菜单</div>
-    </template>
-    <div>
-      <n-list>
-        <n-list-item v-if="props.data.includes('token')" class="list-item-box" @click="setToken">
-          重新设置token
-        </n-list-item>
-        <n-list-item v-if="props.data.includes('back')" class="list-item-box" @click="back">
-          返回上一个页面
-        </n-list-item>
-        <n-list-item v-if="props.data.includes('open')" class="list-item-box" @click="openBrowser">
-          用浏览器打开此页面
-        </n-list-item>
-
-        <n-list-item
-          v-if="props.data.includes('config')"
-          class="list-item-box"
-          @click="goThemeConfig"
-        >
-          页面样式配置
-        </n-list-item>
-      </n-list>
+  <div class="fixed-menu">
+    <div v-if="props.data.includes('token')" class="item" @click="setToken">
+      <n-popover placement="top" trigger="hover" @update:show="true">
+        <template #trigger>
+          <n-icon size="25">
+            <KeyOutline />
+          </n-icon>
+        </template>
+        <span>重新设置token</span>
+      </n-popover>
     </div>
-  </n-popover>
+
+    <div v-if="props.data.includes('back')" class="item" @click="back">
+      <n-popover placement="top" trigger="hover" @update:show="true">
+        <template #trigger>
+          <n-icon size="25">
+            <ArrowBackUp />
+          </n-icon>
+        </template>
+        <span>返回上一个页面</span>
+      </n-popover>
+    </div>
+
+    <div v-if="props.data.includes('open')" class="item" @click="openBrowser">
+      <n-popover placement="top" trigger="hover" @update:show="true">
+        <template #trigger>
+          <n-icon size="25">
+            <FirefoxBrowser />
+          </n-icon>
+        </template>
+        <span>用浏览器打开此页面</span>
+      </n-popover>
+    </div>
+
+    <div v-if="props.data.includes('config')" class="item" @click="goThemeConfig">
+      <n-popover placement="top" trigger="hover" @update:show="true">
+        <template #trigger>
+          <n-icon size="25">
+            <DarkTheme20Filled />
+          </n-icon>
+        </template>
+        <span>页面样式配置</span>
+      </n-popover>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -76,28 +99,36 @@ const goThemeConfig = function () {
   z-index: 2;
 
   position: fixed;
-  width: 44px;
-  height: 44px;
+  height: 40px;
 
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  bottom: 100px;
-
-  right: 100px;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
 
   border-radius: 22px;
 
-  background-color: #ffffff;
+  background-color: #ffffff24;
 
   color: rgb(51, 54, 57);
 
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.12);
 
-  &:hover {
-    color: #36ad6a;
+  .item {
+    width: 80px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    &:hover {
+      color: #36ad6a;
+    }
   }
 }
 

@@ -49,7 +49,7 @@ const getRecommendTest = async function () {
 const handleScroll = ({ target }) => {
   if (target.scrollTop + target.clientHeight >= target.scrollHeight * 0.8) {
     page.value.pageNumber++
-    // getRecommend()
+    getRecommend()
   }
 }
 
@@ -147,8 +147,8 @@ window.api.app.onAppUpdateDownloaded((event) => {
 })
 
 onMounted(() => {
-  getRecommendTest()
-  // getRecommend()
+  // getRecommendTest()
+  getRecommend()
   const scroll = document.getElementsByClassName('n-scrollbar-container')[0]
   scroll.addEventListener('scroll', debounce(handleScroll, 200))
 })
@@ -193,12 +193,11 @@ export default {
 
 <style scoped lang="scss">
 .background {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
 
   background-color: var(--a-back);
 
-  overflow: auto;
   .container {
     display: flex;
     flex-direction: column;

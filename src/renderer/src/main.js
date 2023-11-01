@@ -24,7 +24,8 @@ import {
   NSpace,
   NSwitch,
   NDialogProvider,
-  NNotificationProvider
+  NNotificationProvider,
+  NIcon
 } from 'naive-ui'
 
 const pinia = createPinia()
@@ -43,7 +44,8 @@ const naive = create({
     NSpace,
     NSwitch,
     NDialogProvider,
-    NNotificationProvider
+    NNotificationProvider,
+    NIcon
   ]
 })
 
