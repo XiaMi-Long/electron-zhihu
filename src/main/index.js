@@ -33,9 +33,9 @@ function createWindow(loadingWindow) {
   })
   mainWindow.setMenu(null)
 
-  setTimeout(() => {
-    mainWindow.webContents.toggleDevTools()
-  }, 2000)
+  // setTimeout(() => {
+  //   mainWindow.webContents.toggleDevTools()
+  // }, 2000)
 
   mainWindow.on('ready-to-show', () => {
     loadingWindow.close()
